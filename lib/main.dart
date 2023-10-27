@@ -72,7 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
               label: Container(
                   padding: EdgeInsets.all(8.0),
                   alignment: Alignment.center,
-                  child: Text('Salary'))),
+                  child: const Text('Salary'))),
+          GridColumn(
+              columnName: 'actions',
+              label: Container(
+                  padding: EdgeInsets.all(8.0),
+                  alignment: Alignment.center,
+                  child: const Text('Actions'))),
         ],
       ),
     );
@@ -86,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Employee(10004, 'Michael', 'Designer', 1000),
       Employee(10005, 'Martin', 'Developer', 700),
       Employee(10006, 'Newberry', 'Developer', 100),
-      Employee(10007, 'Balnc', 'Developer', 880),
+      Employee(10007, 'Balance', 'Developer', 880),
       Employee(10008, 'Perry', 'Developer', 1150),
       Employee(10009, 'Gable', 'Developer', 752),
       Employee(10010, 'Grimes', 'Developer', 99)
@@ -112,6 +118,8 @@ class EmployeeDataSource extends DataGridSource {
               DataGridCell<String>(
                   columnName: 'designation', value: e.designation),
               DataGridCell<int>(columnName: 'salary', value: e.salary),
+              const DataGridCell<String>(
+                  columnName: 'actions', value: 'Actions'),
             ]))
         .toList();
   }
@@ -123,10 +131,9 @@ class EmployeeDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter buildRow(DataGridRow row) {
-
     Color getRowBackgroundColor() {
       final int salary = row.getCells()[3].value;
-      if (salary >=0 && salary <= 100) {
+      if (salary >= 0 && salary <= 100) {
         return Colors.red[300]!;
       } else if (salary >= 10000) {
         return Colors.yellow[300]!;
@@ -136,13 +143,24 @@ class EmployeeDataSource extends DataGridSource {
     }
 
     return DataGridRowAdapter(
-      color: getRowBackgroundColor(),
+        color: getRowBackgroundColor(),
         cells: row.getCells().map<Widget>((e) {
-      return Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(8.0),
-        child: Text(e.value.toString()),
-      );
-    }).toList());
+          int index = row.getCells()[0].value;
+          if (e.columnName == 'actions') {
+            return IconButton(
+              icon: const Icon(Icons.edit),
+              color: Colors.blue,
+              onPressed: () {
+                if (index == 10006) {print('id 1006');}
+                else{print('object');}
+              },
+            );
+          }
+          return Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(8.0),
+            child: Text(e.value.toString()),
+          );
+        }).toList());
   }
 }
